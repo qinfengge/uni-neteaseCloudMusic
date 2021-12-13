@@ -96,6 +96,10 @@
 						pdLogin(phone, password).then(res => {
 							if (res.data.code == 200) {
 								uni.setStorage({
+									key: 'uid',
+									data: res.data.account.id,
+								})
+								uni.setStorage({
 									key: 'cookie',
 									data: res.data.cookie,
 									success() {
@@ -103,8 +107,10 @@
 										uni.switchTab({
 											url:'../index/index'
 										})
+										
 									}
 								})
+								// this.$store.commit('SETUID', res.data.account.id)
 							}else{
 								alert(res.data.msg)
 							}

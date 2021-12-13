@@ -104,6 +104,7 @@
 						uni.switchTab({
 							url:'/pages/index/index'
 						})
+						this.$store.commit('SETUID', res[1].data.account.id)
 					} else {
 						alert(res[1].data.msg)
 					}

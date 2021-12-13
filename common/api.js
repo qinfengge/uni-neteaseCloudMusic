@@ -176,7 +176,7 @@ export function getUser() {
 export function getUserPlayList(uid) {
 	getCookie()
 	return uni.request({
-		url: `${baseUrl}/user/playlist?uid=${uid}`,
+		url: `${baseUrl}/user/playlist?uid=${uid}&timestamp=${time}&cookie=${cookie}`,
 		withCredentials: true,
 		method: 'GET'
 	});
@@ -197,6 +197,56 @@ export function getCloudUrl(id) {
 	getCookie()
 	return uni.request({
 		url: `${baseUrl}/user/cloud/detail?id=${id}&timestamp=${time}&cookie=${cookie}`,
+		withCredentials: true,
+		method: 'GET'
+	});
+}
+
+// 获取MV歌曲URL
+export function getMVUrl(id) {
+	getCookie()
+	return uni.request({
+		url: `${baseUrl}/mv/url?id=${id}&r=720&timestamp=${time}&cookie=${cookie}`,
+		withCredentials: true,
+		method: 'GET'
+	});
+}
+
+// 检查歌曲是否可用
+export function checkMusic(id) {
+	getCookie()
+	return uni.request({
+		url: `${baseUrl}/check/music?id=${id}&timestamp=${time}&cookie=${cookie}`,
+		withCredentials: true,
+		method: 'GET'
+	});
+}
+
+// 喜欢歌曲
+export function likeMusic(id) {
+	getCookie()
+	return uni.request({
+		url: `${baseUrl}/like?id=${id}&timestamp=${time}&cookie=${cookie}`,
+		withCredentials: true,
+		method: 'GET'
+	});
+}
+
+// 喜欢的歌曲列表
+export function likeMusicItems(uid) {
+	getCookie()
+	return uni.request({
+		url: `${baseUrl}/likelist?uid=${uid}&timestamp=${time}&cookie=${cookie}`,
+		withCredentials: true,
+		method: 'GET'
+	});
+}
+
+// 从歌单删除歌曲
+export function removeMusic(pid,songId) {
+	getCookie()
+	return uni.request({
+		url: `${baseUrl}/playlist/tracks?op=del&pid=${pid}&tracks=${songId}&timestamp=${time}&cookie=${cookie}`,
 		withCredentials: true,
 		method: 'GET'
 	});

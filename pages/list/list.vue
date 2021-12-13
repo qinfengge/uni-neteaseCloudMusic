@@ -30,10 +30,10 @@
 						<text>播放全部</text>
 						<text>(共{{playlist.trackCount}}首)</text>
 					</view>
-					<view class="list-music-item" v-for="(item,index) in playlist.tracks" :key="index" @tap="handleToDetail(item.id)">
+					<view class="list-music-item" v-for="(item,index) in playlist.tracks" :key="index"  @tap="handleToDetail(item.id)">
 						<view class="list-music-index">{{index+1}}</view>
 						<view class="list-music-detail">
-							<view>{{item.name}}</view>
+							<view><span>{{item.name}}</span> <image v-if="item.mv!=0" src="../../static/MV.png"  @tap="handleToPlayMV(item.mv)"></image></view>
 							<view>
 								<image v-if="privileges[index].flag>60 && privileges[index].flag<70" src="../../static/dujia.png"></image>
 								<image v-if="privileges[index].maxbr == 999000" src="../../static/sq.png"></image>
@@ -69,7 +69,7 @@
 <script>
 	import '@/common/iconfont.css';
 	import musicHead from '../../components/musicHead/musicHead.vue';
-	import {list,getCookie} from '../../common/api.js'
+	import {list,getCookie,checkMusic} from '../../common/api.js'
 	export default {
 		components: {
 			musicHead
@@ -102,8 +102,28 @@
 		},
 		methods: {
 			handleToDetail(songId){
+				checkMusic(songId).then(res =>{
+					if(res[1].data.success == false){
+						uni.showToast({
+							title: res[1].data.message,
+							icon: 'error',
+							duration: 2000
+						});
+					}else{
+						uni.navigateTo({
+							url: '/pages/detail/detail?songId=' + songId,
+						});
+					}
+				})
+			},
+			handleToPlayMV(mvId){
 				uni.navigateTo({
-					url: '/pages/detail/detail?songId=' + songId,
+					url: '/pages/mv/playMV',
+					success: res => {},
+					fail: (res) => {
+						console.log(res)
+					},
+					complete: () => {}
 				});
 			}
 		}
@@ -218,6 +238,10 @@
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
+}
+.list-music-detail view:nth-child(1) image{
+	width: 40rpx;
+	height: 40rpx;
 }
 .list-music-detail view:nth-child(2){
 	/* display: flex; */

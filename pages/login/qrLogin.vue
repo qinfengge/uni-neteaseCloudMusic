@@ -65,6 +65,7 @@
 						await getLoginStatus()
 						console.log(statusRes)
 						// localStorage.setItem('cookie',JSON.stringify(statusRes.cookie))
+						this.$store.commit('SETUID', statusRes.account.id)
 						uni.removeStorage({
 							key:'cookie',
 							success() {
