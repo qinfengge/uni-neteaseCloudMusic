@@ -20,7 +20,7 @@ demo  163.gggg.plus
 
 歌单页
 
-![image-20211214193357111](https://qinfengge-1256120090.cos.ap-chengdu.myqcloud.com/hexo/cos/image-20211214193422974.png)
+![image-20211214193357111](https://qinfengge-1256120090.cos.ap-chengdu.myqcloud.com/hexo/cos/image-20211214194334335.png)
 
 歌曲详情页
 
