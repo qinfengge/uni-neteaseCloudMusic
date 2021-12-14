@@ -17,6 +17,34 @@
 					<text class="iconfont iconsearch"></text>
 					<input placeholder="搜索歌曲" />
 				</view>
+				<view class="index-grid">
+					<uni-grid :column="3" :showBorder="false" :square="false" class="index-grid-tools" @change="handleToRecommend">
+					    <uni-grid-item :index='1'>
+					        <view class="grid-item">
+								<svg class="icon" aria-hidden="true">
+								  <use xlink:href="#icon-meirituijian"></use>
+								</svg>
+								<text>每日推荐</text>
+							</view>
+					    </uni-grid-item>
+					    <uni-grid-item :index='2'>
+					        <view class="grid-item">
+					        	<svg class="icon" aria-hidden="true">
+					        	  <use xlink:href="#icon-faxian_sirenFM"></use>
+					        	</svg>
+					        	<text>私人FM</text>
+					        </view>
+					    </uni-grid-item>
+					    <uni-grid-item :index='3'>
+					        <view class="grid-item">
+					        	<svg class="icon" aria-hidden="true">
+					        	  <use xlink:href="#icon-faxian_gedan"></use>
+					        	</svg>
+					        	<text>推荐歌单</text>
+					        </view>
+					    </uni-grid-item>
+					</uni-grid>
+				</view>
 				<view v-if="isLoading">
 					<m-for-skeleton :avatarSize="200" :row="3" :loading="isLoading" isarc="square"
 						v-for="(item,key) in 4" :key="key" :titleStyle={} :title="false">
@@ -54,10 +82,12 @@
 
 <script>
 	import '@/common/iconfont.css';
+	import '@/static/iconfont/iconfont.js'
 	import musicHead from '../../components/musicHead/musicHead.vue';
 	import {
 		topList,
-		getBanner
+		getBanner,
+		FM
 	} from '../../common/api.js'
 	import mForSkeleton from "@/components/m-for-skeleton/m-for-skeleton";
 	export default {
@@ -84,16 +114,16 @@
 				});
 			};
 			// #endif
-			// #ifdef MP-WEIXIN
-			uni.getStorage({
-				key: 'cookie',
-				fail() {
-					uni.navigateTo({
-						url: '/pages/login/login',
-					});
-				}
-			})
-			// #endif
+			// // #ifdef MP-WEIXIN
+			// uni.getStorage({
+			// 	key: 'cookie',
+			// 	fail() {
+			// 		uni.navigateTo({
+			// 			url: '/pages/login/login',
+			// 		});
+			// 	}
+			// })
+			// // #endif
 			topList().then(res => {
 				if (res.length) {
 					setTimeout(() => {
@@ -103,7 +133,6 @@
 				}
 			});
 			getBanner().then(res => {
-
 				if (res[1].data.code == '200') {
 					this.banners = res[1].data.banners
 				}
@@ -120,6 +149,34 @@
 					url: '/pages/search/search',
 				});
 			},
+			handleToRecommend(e){
+				console.log(e.detail.index)
+				if(e.detail.index == 1){
+					uni.navigateTo({
+						url: '/pages/dailySongs/dailySongs',
+						success: res => {},
+						fail: () => {},
+						complete: () => {}
+					});
+				}else if(e.detail.index == 2){
+					FM().then(res =>{
+						if(res[1].data.code == '200'){
+							let fmSong = res[1].data.data[0].id
+							this.$store.commit('INIT_TOPLISTIDS',res[1].data.data)
+							uni.navigateTo({
+								url: '/pages/detail/detail?songId=' + fmSong,
+							});
+						}
+					})
+				}else if(e.detail.index == 3){
+					uni.navigateTo({
+						url: '/pages/dailyPlayList/dailyPlayList',
+						success: res => {},
+						fail: () => {},
+						complete: () => {}
+					});
+				}
+			}
 			// checkLogin(){
 			// 	console.log(document.cookie)
 			// 	if(document.cookie == null || document.cookie == ''){
@@ -141,6 +198,14 @@
 </script>
 
 <style scoped>
+	.icon {
+		/* z-index: 999; */
+		width: 3em;
+		height: 3em;
+		vertical-align: -0.15em;
+		fill: currentColor;
+		overflow: hidden;
+	}
 	.index {}
 
 	.index-search {
@@ -161,7 +226,6 @@
 		font-size: 26rpx;
 		flex: 1;
 	}
-
 	.index-list {
 		margin: 0 30rpx;
 	}
@@ -218,5 +282,15 @@
 		width: 100%;
 		height: 100%;
 		transform: translate(-50%, -50%);
+	}
+	.index-grid-tools{
+		height: 100rpx;
+	}
+	.index-grid{
+		margin-bottom: 30rpx;
+	}
+	.grid-item{
+		display: flex;
+		align-items: center;
 	}
 </style>

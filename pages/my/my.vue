@@ -12,6 +12,9 @@
 			    <text @tap="handleToUserCloud">云盘</text>
 			</uni-card>
 			<uni-card>
+			    <text @tap="handleToRecent">最近播放</text>
+			</uni-card>
+			<uni-card>
 				<view class="my-playList">
 					<view class="my-playList-item" v-for="(item,index) in userPlayList" :key="index" @tap="handleToPlayListDetail(item.id)">
 						<image :src="item.coverImgUrl"></image>
@@ -45,6 +48,14 @@
 			handleToUserCloud(){
 				uni.navigateTo({
 					url: '/pages/cloud/cloud',
+					success: res => {},
+					fail: () => {},
+					complete: () => {}
+				});
+			},
+			handleToRecent(){
+				uni.navigateTo({
+					url: '/pages/recent/recent',
 					success: res => {},
 					fail: () => {},
 					complete: () => {}

@@ -13,7 +13,7 @@
 			"path": "pages/index/index",
 			"style": {
 				"navigationStyle" : "custom",
-				"enablePullDownRefresh": true
+				"enablePullDownRefresh": false
 			}
 		}
 	    ,{
@@ -85,8 +85,7 @@
             "path" : "pages/cloud/cloud",
             "style" :                                                                                    
             {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
+                "navigationStyle" : "custom"
             }
             
         }
@@ -94,8 +93,7 @@
             "path" : "pages/mv/mv",
             "style" :                                                                                    
             {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
+                "navigationStyle" : "custom"
             }
             
         }
@@ -108,6 +106,31 @@
 		    }
 		    
 		}
+        ,{
+            "path" : "pages/recent/recent",
+            "style" :                                                                                    
+            {
+                "navigationStyle" : "custom"
+            }
+            
+        }
+        ,{
+            "path" : "pages/dailySongs/dailySongs",
+            "style" :                                                                                    
+            {
+                "navigationStyle" : "custom"
+            }
+            
+        }
+        ,{
+            "path" : "pages/dailyPlayList/dailyPlayList",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

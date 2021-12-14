@@ -101,10 +101,13 @@
 							data: res[1].data.cookie
 						})
 						getCookie()
+						uni.setStorage({
+							key: 'uid',
+							data: res[1].data.account.id,
+						})
 						uni.switchTab({
 							url:'/pages/index/index'
 						})
-						this.$store.commit('SETUID', res[1].data.account.id)
 					} else {
 						alert(res[1].data.msg)
 					}

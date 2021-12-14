@@ -251,3 +251,53 @@ export function removeMusic(pid,songId) {
 		method: 'GET'
 	});
 }
+
+// 获取最近播放歌曲
+export function recentPlay() {
+	getCookie()
+	return uni.request({
+		url: `${baseUrl}/record/recent/song?timestamp=${time}&cookie=${cookie}`,
+		withCredentials: true,
+		method: 'GET'
+	});
+}
+
+// 获取日推
+export function recommendSongs() {
+	getCookie()
+	return uni.request({
+		url: `${baseUrl}/recommend/songs?timestamp=${time}&cookie=${cookie}`,
+		withCredentials: true,
+		method: 'GET'
+	});
+}
+
+// 获取私人FM
+export function FM() {
+	getCookie()
+	return uni.request({
+		url: `${baseUrl}/personal_fm?timestamp=${time}&cookie=${cookie}`,
+		withCredentials: true,
+		method: 'GET'
+	});
+}
+
+// 获取每日推荐歌单
+export function recommendResource() {
+	getCookie()
+	return uni.request({
+		url: `${baseUrl}/recommend/resource?timestamp=${time}&cookie=${cookie}`,
+		withCredentials: true,
+		method: 'GET'
+	});
+}
+
+// 获取MV播放地址
+export function MVUrl(mvId) {
+	getCookie()
+	return uni.request({
+		url: `${baseUrl}/mv/url?id=${mvId}&timestamp=${time}&cookie=${cookie}`,
+		withCredentials: true,
+		method: 'GET'
+	});
+}

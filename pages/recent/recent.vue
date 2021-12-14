@@ -1,21 +1,17 @@
 <template>
 	<view class="list">
-		<view class="fixbg" :style="{background: 'url('+playlist.coverImgUrl+')'}"></view>
+		<view class="fixbg" style="background-image: url('https://i.pinimg.com/564x/5d/37/d4/5d37d41712e23f63b6da902384d41f5e.jpg');"></view>
 		<music-head title="歌单" :icon="true" color="white"></music-head>
 		<view class="container" v-show="!isLoading">
 			<scroll-view scroll-y="true" >
 				<view class="list-head">
 					<view class="list-head-img">
-						<image :src="playlist.coverImgUrl"></image>
-						<text class="iconfont iconyousanjiao">{{playlist.playCount | formatCount}}</text>
+						<image src="http://p2.music.126.net/Zpph-MwysxtjpqI7YIw1zg==/109951166674182447.jpg"></image>
 					</view>
 					<view class="list-head-text">
-						<view>{{playlist.name}}</view>
+						<view>最近播放</view>
 						<view>
-							<image :src="playlist.creator.avatarUrl"></image>{{playlist.creator.nickname}}
-						</view>
-						<view>
-							{{playlist.description}}
+							<image src="http://p2.music.126.net/Zpph-MwysxtjpqI7YIw1zg==/109951166674182447.jpg"></image>
 						</view>
 					</view>
 				</view>
@@ -28,21 +24,19 @@
 					<view class="list-music-head">
 						<text class="iconfont iconbofang1"></text>
 						<text>播放全部</text>
-						<text>(共{{playlist.trackCount}}首)</text>
+						<text>(共{{total}}首)</text>
 					</view>
-					<view class="list-music-item" v-for="(item,index) in playlist.tracks" :key="index" >
+					<view class="list-music-item" v-for="(item,index) in playlist.list" :key="index"  @tap="handleToDetail(item.data.id)">
 						<view class="list-music-index">{{index+1}}</view>
 						<view class="list-music-detail">
-							<view><span @tap="handleToDetail(item.id)">{{item.name}}</span> <image v-if="item.mv!=0" src="../../static/MV.png"  @tap="handleToPlayMV(item.mv)"></image></view>
+							<view><span>{{item.data.name}}</span> <image v-if="item.mv!=0" src="../../static/MV.png"  @tap="handleToPlayMV(item.data.mv)"></image></view>
 							<view>
-								<image v-if="privileges[index].flag>60 && privileges[index].flag<70" src="../../static/dujia.png"></image>
-								<image v-if="privileges[index].maxbr == 999000" src="../../static/sq.png"></image>
 								<!-- {{item.ar[0].name}} -->
-								<span v-for="(i,index) in item.ar">
+								<span v-for="(i,index) in item.data.ar">
 									{{i.name}}
-									<span v-if="item.ar.length>1">/</span>
+									<span v-if="item.data.ar.length>1">/</span>
 								</span>
-								 - {{item.al.name}}
+								 - {{item.data.al.name}}
 							</view>
 						</view>
 						<text class="iconfont iconbofang"></text>
@@ -69,7 +63,7 @@
 <script>
 	import '@/common/iconfont.css';
 	import musicHead from '../../components/musicHead/musicHead.vue';
-	import {list,getCookie,checkMusic} from '../../common/api.js'
+	import {recentPlay,getCookie} from '../../common/api.js'
 	export default {
 		components: {
 			musicHead
@@ -82,19 +76,18 @@
 						avatarUrl : '' ,
 					}
 				},
-				privileges: {
-					
-				},
+				total : 0,
 				isLoading : true
 			}
 		},
 		onLoad(options) {
 			// console.log(options.listId)
-			list(options.listId).then(res => {
+			recentPlay().then(res =>{
 				if(res[1].data.code == '200'){
-					this.playlist = res[1].data.playlist;
-					this.privileges = res[1].data.privileges;
-					this.$store.commit('INIT_TOPLISTIDS',res[1].data.playlist.trackIds)
+					console.log(res[1].data.data.list[0].data)
+					this.playlist = res[1].data.data;
+					this.total = res[1].data.data.total;
+					this.$store.commit('INIT_TOPLISTIDS',res[1].data.data.list)
 					this.isLoading = false
 					
 				}
@@ -102,31 +95,19 @@
 		},
 		methods: {
 			handleToDetail(songId){
-				checkMusic(songId).then(res =>{
-					if(res[1].data.success == false){
-						uni.showToast({
-							title: res[1].data.message,
-							icon: 'error',
-							duration: 2000
-						});
-					}else{
 						uni.navigateTo({
 							url: '/pages/detail/detail?songId=' + songId,
 						});
-					}
-				})
 			},
 			handleToPlayMV(mvId){
-				if(mvId!=0){
-					uni.navigateTo({
-						url: '/pages/mv/playMV?mvId=' + mvId,
-						success: res => {},
-						fail: (res) => {
-							console.log(res)
-						},
-						complete: () => {}
-					});
-				}
+				uni.navigateTo({
+					url: '/pages/mv/playMV',
+					success: res => {},
+					fail: (res) => {
+						console.log(res)
+					},
+					complete: () => {}
+				});
 			}
 		}
 	}

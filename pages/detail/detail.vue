@@ -220,7 +220,7 @@
 					}
 					if(res[4][1].data.code == '200'){
 						let likedSongs = res[4][1].data.ids
-						console.log(likedSongs)
+						// console.log(likedSongs)
 						for(var i =0;i<likedSongs.length;i++){
 							if(this.songDetail.id == likedSongs[i]){
 								this.isLike = true
@@ -247,11 +247,19 @@
 						this.iconPlay = 'iconbofang1';
 						this.isPlayRotate = false
 						// #endif
+						// #ifdef APP
+						this.bgAudioManager = uni.getBackgroundAudioManager();
+						this.bgAudioManager.title = this.songDetail.name;
+						this.bgAudioManager.singer = this.songDetail.ar[0].name;
+						this.bgAudioManager.volume = 0.2;
+						this.bgAudioManager.coverImgUrl = this.songDetail.al.picUrl;
+						// #endif
 						console.log(res[5][1].data.data[0].url)
 						this.bgAudioManager.src = res[5][1].data.data[0].url || ''
 						this.listenLyricIndex()
 						this.bgAudioManager.onPlay(() => {
 							this.iconPlay = 'iconpause';
+							this.isDetailPlay = true
 							this.isPlayRotate = true
 							this.listenLyricIndex()
 
@@ -265,6 +273,7 @@
 						})
 						this.bgAudioManager.onPause(() => {
 							this.iconPlay = 'iconbofang1';
+							this.isDetailPlay = false
 							this.isPlayRotate = false
 							this.cancelLyricIndex()
 						});
@@ -373,10 +382,9 @@
 			},
 			handleToDetailController() {
 				if (this.isDetailPlay) {
-					this.isDetailPlay = false
 					this.bgAudioManager.pause()
 				} else {
-					this.isDetailPlay = true
+					// this.isDetailPlay = true
 					this.bgAudioManager.play()
 				}
 			},
@@ -409,6 +417,7 @@
 			}
 		},
 		onLoad(options) {
+			// console.log(this.bgAudioManager.src)
 			uni.getStorage({
 				key: 'uid',
 				success: (res) =>{
@@ -426,9 +435,9 @@
 		},
 		onUnload() {
 			this.cancelLyricIndex()
-			// #ifdef H5
-			this.bgAudioManager.destroy()
-			// #endif
+			// // #ifdef H5
+			// this.bgAudioManager.destroy()
+			// // #endif
 		},
 		onHide() {
 			this.cancelLyricIndex()
@@ -719,7 +728,7 @@
 	.like{
 		z-index: 99;
 		font-size: 25rpx;
-		color: #3A3A3A;
+		color: white;
 	}
 	.detail-volume {
 		z-index: 199;

@@ -65,19 +65,12 @@
 						await getLoginStatus()
 						console.log(statusRes)
 						// localStorage.setItem('cookie',JSON.stringify(statusRes.cookie))
-						this.$store.commit('SETUID', statusRes.account.id)
-						uni.removeStorage({
-							key:'cookie',
-							success() {
-								uni.setStorage({
-									key: 'cookie',
-									data: statusRes.cookie
-								})
-								getCookie()
-								uni.switchTab({
-									url:'/pages/index/index'
-								})
-							}
+						uni.setStorage({
+							key: 'cookie',
+							data: statusRes.cookie
+						})
+						uni.switchTab({
+							url: '/pages/index/index'
 						})
 					}
 				}, 3000)
@@ -91,15 +84,16 @@
 	.info {
 		white-space: pre;
 	}
-	.qrLogin{
+
+	.qrLogin {
 		width: 100vw;
 		height: calc(100vh - 70px);
 		/* border: 1px dashed #000; */
 		display: table-cell;
 		/*主要是这个属性*/
-		
+
 		vertical-align: middle;
-		
+
 		text-align: center;
 	}
 </style>
