@@ -96,8 +96,8 @@
 		/* left: 20rpx; */
 	}
 	.my-playList-item image{
-		width: 120rpx;
-		height: 100rpx;
+		width: 125rpx;
+		height: 110rpx;
 		border-radius: 20rpx;
 	}
 	.my-playList-item {
@@ -112,7 +112,7 @@
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
-		margin: 0 20rpx;
+		margin: 0 10rpx;
 		width: 60vw;
 	}
 </style>

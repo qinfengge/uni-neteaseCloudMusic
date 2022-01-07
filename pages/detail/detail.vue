@@ -1,6 +1,7 @@
 <template>
 	<view class="detail">
-		<view class="fixbg" :style="{'background-image': 'url('+ songDetail.al.picUrl +')'}"></view>
+		<view class="fixbg" :style="{'background-image': 'url('+ songDetail.al.picUrl +')'}">
+		</view>
 		<view v-if="isController">
 			<music-head :title="songDetail.name" :icon="true" color="white"></music-head>
 			<view class="container" v-show="!isLoading">
@@ -13,7 +14,7 @@
 					<view class="detail-lyric" @tap="handleToController">
 						<view class="detail-lyric-wrap"
 							:style="{ transform : 'translateY('+ - (lyricIndex - 1) * 80 + 'rpx)'}">
-							<view class="detail-lyric-item" :class="{active : lyricIndex == index}"
+							<view id="lyric" class="detail-lyric-item" :class="{active : lyricIndex == index}"
 								v-for="(item,index) in songLyric" :key="index">{{item.lyric}}</view>
 						</view>
 					</view>
@@ -81,7 +82,7 @@
 			</view>
 			<view class="detail-ly">
 				<view class="detail-lyric" @tap="handleToController"
-					style="height: 80vh ; line-height: 10rpx; color: #C0C0C0;">
+					style="height: 80vh ; line-height: 5rpx; color: #C0C0C0;">
 					<view class="detail-lyric-wrap"
 						:style="{ transform : 'translateY('+ - (lyricIndex - 1) * 80 + 'rpx)'}">
 						<view class="detail-lyric-item" :class="{active : lyricIndex == index}"
@@ -95,7 +96,8 @@
 					<dc-slider @changing="changing" @changed="changed" :max="max" :min="min" :step="1" :disabled="false"
 						:value="progressVal" :activeColor="activeColor"></dc-slider>
 				</view>
-				<view>0{{songTimeM}}:{{songTimeS}}</view>
+				<!-- 歌曲总时长 当不足一分钟 songTimeM会等于1-->
+				<view>0{{songTimeM==1 ? 0 : songTimeM }}:{{songTimeS}}</view>
 			</view>
 			<view class="detail-play-controller">
 				<view class="like" @tap="handleToLike(songDetail.id)">
@@ -129,7 +131,6 @@
 		</view>
 	</view>
 </template>
-
 <script>
 	import '@/common/iconfont.css';
 	import '@/static/iconfont/iconfont.js'
@@ -224,7 +225,7 @@
 						for(var i =0;i<likedSongs.length;i++){
 							if(this.songDetail.id == likedSongs[i]){
 								this.isLike = true
-								console.log(this.isLike)
+								// console.log(this.isLike)
 								break
 							}else{
 								this.isLike = false
@@ -269,7 +270,7 @@
 							this.currentTime = Number(ct).toFixed(0)
 							// console.log(this.currentTime)
 							this.progressVal = (Number(this.currentTime / this.songTime)) * 100
-							console.log(this.progressVal)
+							// console.log(this.progressVal)
 						})
 						this.bgAudioManager.onPause(() => {
 							this.iconPlay = 'iconbofang1';
@@ -283,11 +284,11 @@
 						// #ifdef H5
 						this.bgAudioManager.onCanplay(() => {
 							this.songTime = this.bgAudioManager.duration
-							console.log(this.songTime)
+							// console.log(this.songTime)
 							this.songTimeM = Number(this.songTime / 60).toFixed(0)
-							console.log(this.songTimeM)
+							// console.log(this.songTimeM)
 							this.songTimeS = Number(this.songTime % 60).toFixed(0)
-							console.log(this.songTimeS)
+							// console.log(this.songTimeS)
 						})
 						// #endif
 					}
@@ -535,6 +536,7 @@
 
 	.detail-lyric-item {
 		height: 80rpx;
+		mix-blend-mode: difference;
 	}
 
 	.detail-lyric-item.active {
@@ -679,8 +681,15 @@
 	.detail-ly {
 		position: relative;
 		z-index: 99;
+		margin-bottom: 50rpx;
+		position: relative;
+		bottom: 40vh;
 	}
-
+	.detail-ly view:nth-child(1){
+		position: relative;
+		top: 40vh;
+	}
+	
 	.detail-progress {
 		width: 100%;
 		font-size: 30rpx;
