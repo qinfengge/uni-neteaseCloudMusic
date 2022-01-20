@@ -99,7 +99,8 @@
 				indicatorDots: true,
 				autoplay: true,
 				interval: 5000,
-				duration: 500
+				duration: 500,
+				cookie: ''
 			}
 		},
 		components: {
@@ -149,6 +150,28 @@
 					url: '/pages/search/search',
 				});
 			},
+			checkLogin(){
+				uni.getStorage({
+					key: 'cookie',
+					success: (res) => {
+						this.cookie = res.data
+					}
+				});
+				console.log(this.cookie)
+				if(this.cookie == null || this.cookie == ''){
+					uni.showToast({
+					    title: '请先的登录',
+						icon: 'error',
+					    duration: 2000
+					});
+					uni.navigateTo({
+						url: '/pages/login/login',
+						success: res => {},
+						fail: () => {},
+						complete: () => {}
+					});
+				}
+			},
 			handleToRecommend(e){
 				console.log(e.detail.index)
 				if(e.detail.index == 1){
@@ -177,22 +200,10 @@
 					});
 				}
 			}
-			// checkLogin(){
-			// 	console.log(document.cookie)
-			// 	if(document.cookie == null || document.cookie == ''){
-			// 		uni.showToast({
-			// 		    title: '请先的登录',
-			// 			icon: 'error',
-			// 		    duration: 2000
-			// 		});
-			// 		uni.navigateTo({
-			// 			url: '/pages/login/login',
-			// 			success: res => {},
-			// 			fail: () => {},
-			// 			complete: () => {}
-			// 		});
-			// 	}
-			// },
+			
+		},
+		mounted() {
+			this.checkLogin()
 		}
 	}
 </script>

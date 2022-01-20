@@ -82,11 +82,13 @@
 			</view>
 			<view class="detail-ly">
 				<view class="detail-lyric" @tap="handleToController"
-					style="height: 80vh ; line-height: 5rpx; color: #C0C0C0;">
+					style="line-height: 5rpx; color: #C0C0C0;">
 					<view class="detail-lyric-wrap"
 						:style="{ transform : 'translateY('+ - (lyricIndex - 1) * 80 + 'rpx)'}">
 						<view class="detail-lyric-item" :class="{active : lyricIndex == index}"
-							v-for="(item,index) in songLyric" :key="index">{{item.lyric}}</view>
+							v-for="(item,index) in songLyric" :key="index">
+							{{item.lyric}}
+							</view>
 					</view>
 				</view>
 			</view>
@@ -309,6 +311,7 @@
 			listenLyricIndex() {
 				clearInterval(this.timer);
 				this.timer = setInterval(() => {
+					this.lyricIndex = 0
 					for (var i = 0; i < this.songLyric.length; i++) {
 						if (this.bgAudioManager.currentTime > this.songLyric[this.songLyric.length - 1].time) {
 							this.lyricIndex = this.songLyric.length - 1
@@ -330,6 +333,7 @@
 				this.getMusic(songId)
 			},
 			handleToController() {
+				this.listenLyricIndex()
 				console.log(this.isLike)
 				if (this.isController) {
 					this.isController = false
@@ -525,6 +529,8 @@
 		line-height: 80rpx;
 		height: 240rpx;
 		text-align: center;
+		text-overflow: ellipsis;
+		white-space: nowrap;
 		overflow: hidden;
 		color: #6f6e93;
 		font-weight: 400;
@@ -536,7 +542,6 @@
 
 	.detail-lyric-item {
 		height: 80rpx;
-		mix-blend-mode: difference;
 	}
 
 	.detail-lyric-item.active {
@@ -679,15 +684,17 @@
 	}
 
 	.detail-ly {
+		height: 80vh ;
 		position: relative;
 		z-index: 99;
 		margin-bottom: 50rpx;
-		position: relative;
-		bottom: 40vh;
+		
 	}
 	.detail-ly view:nth-child(1){
+		height: 120vh;
 		position: relative;
-		top: 40vh;
+		bottom: 40vh;
+		z-index: 99;
 	}
 	
 	.detail-progress {
