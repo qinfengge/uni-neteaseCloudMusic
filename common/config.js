@@ -1,3 +1,3 @@
 // export const baseUrl = 'http://localhost:3000';
 // tencent Cloud
-export const baseUrl = 'https://163.lizhiao.top';
+export const baseUrl = 'https://netease-cloud-music-api-git-master-yujianyasuo.vercel.app';
