@@ -9,6 +9,13 @@
 		onHide: function() {
 			console.log('App Hide')
 		},
+		
+		watch: {
+			$route(to, from) {
+				this.$store.commit('SETFABKEY')
+			}
+		},
+		
 	}
 </script>
 

@@ -1,5 +1,6 @@
 <template>
 	<view>
+		<popu-fab ref="popu"></popu-fab>
 		<scroll-view scroll-y="true">
 			<view class="index-grid">
 				<uni-grid :column="3" :showBorder="false" :square="false" class="index-grid-tools"
@@ -49,6 +50,13 @@
 					console.log(this.playlist)
 				}
 			})
+		},
+		
+		mounted() {
+			const timer = setInterval(()=>{
+				this.key = this.$store.state.fabKey
+				this.$refs.popu.fresh()
+			}, 2000) // 每两秒执行1次
 		}
 	}
 </script>

@@ -3,6 +3,7 @@ import App from './App'
 import axios from 'axios'
 import VueAxios from "vue-axios";
 import store from 'store/index.js'
+import popuFab from '@/components/popu-fab/popu-fab.vue'
 Vue.use(VueAxios,axios)
 Vue.filter('formatCount',function(value){
 	if(value>=10000 && value<=100000000){
@@ -23,6 +24,7 @@ Vue.filter('formatTime',function(value){
 	return date.getFullYear() + '年' + (date.getMonth() + 1) + '月' + date.getDate() + '号' + date.getHours() + '点'
 })
 
+Vue.component('popu-fab', popuFab)
 // #ifndef VUE3
 import Vue from 'vue'
 Vue.config.productionTip = false

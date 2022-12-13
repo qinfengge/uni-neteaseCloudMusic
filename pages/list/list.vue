@@ -1,5 +1,6 @@
 <template>
 	<view class="list">
+		<popu-fab ref="popu" :key="key"></popu-fab>
 		<view class="fixbg" :style="{background: 'url('+playlist.coverImgUrl+')'}"></view>
 		<music-head title="歌单" :icon="true" color="white"></music-head>
 		<view class="container" v-show="!isLoading">
@@ -85,7 +86,8 @@
 				privileges: {
 					
 				},
-				isLoading : true
+				isLoading : true,
+				key: 0
 			}
 		},
 		onLoad(options) {
@@ -128,6 +130,12 @@
 					});
 				}
 			}
+		},
+		mounted() {
+			const timer = setInterval(()=>{
+				this.key = this.$store.state.fabKey
+				this.$refs.popu.fresh()
+			}, 2000) // 每两秒执行1次
 		}
 	}
 </script>

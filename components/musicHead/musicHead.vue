@@ -20,7 +20,16 @@
 		props: ['title','icon','color','iconblack'],
 		methods:{
 			handleToBack(){
-				uni.navigateBack();
+				let pages = getCurrentPages(); // 当前页面
+				let beforePage = pages[pages.length - 2]; // 前一个页面
+				// console.log(pages)
+				uni.navigateBack({
+				         delta: 1,
+				         success: () => {
+				             // beforePage.$vm.$refs.popu.reFresh(); // 执行前一个页面的刷新
+							 // beforePage.$vm.popuRefresh()
+				         }
+				     });
 			},
 			handleToHome(){
 				uni.switchTab({

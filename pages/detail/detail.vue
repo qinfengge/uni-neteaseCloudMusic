@@ -81,14 +81,13 @@
 					:value="volume" :activeColor="activeColor"></dc-slider>
 			</view>
 			<view class="detail-ly">
-				<view class="detail-lyric" @tap="handleToController"
-					style="line-height: 5rpx; color: #C0C0C0;">
+				<view class="detail-lyric" @tap="handleToController" style="line-height: 5rpx; color: #C0C0C0;">
 					<view class="detail-lyric-wrap"
 						:style="{ transform : 'translateY('+ - (lyricIndex - 1) * 80 + 'rpx)'}">
 						<view class="detail-lyric-item" :class="{active : lyricIndex == index}"
 							v-for="(item,index) in songLyric" :key="index">
 							{{item.lyric}}
-							</view>
+						</view>
 					</view>
 				</view>
 			</view>
@@ -191,7 +190,8 @@
 			getMusic(songId) {
 				this.$store.commit('NEXT_ID', songId)
 				this.$store.commit('PRE_ID', songId)
-				Promise.all([songDetail(songId), songSimi(songId), songComment(songId), songLyric(songId), likeMusicItems(this.uid), songUrl(
+				Promise.all([songDetail(songId), songSimi(songId), songComment(songId), songLyric(songId), likeMusicItems(
+					this.uid), songUrl(
 					songId)]).then((res) => {
 					if (res[0][1].data.code == '200') {
 						this.songDetail = res[0][1].data.songs[0]
@@ -221,16 +221,18 @@
 						}
 
 					}
-					if(res[4][1].data.code == '200'){
+					if (res[4][1].data.code == '200') {
 						let likedSongs = res[4][1].data.ids
 						// console.log(likedSongs)
-						for(var i =0;i<likedSongs.length;i++){
-							if(this.songDetail.id == likedSongs[i]){
+						for (var i = 0; i < likedSongs.length; i++) {
+							if (this.songDetail.id == likedSongs[i]) {
 								this.isLike = true
+								this.$store.commit('SETISLIKED', true)
 								// console.log(this.isLike)
 								break
-							}else{
+							} else {
 								this.isLike = false
+								this.$store.commit('SETISLIKED', false)
 							}
 						}
 					}
@@ -258,7 +260,7 @@
 						this.bgAudioManager.coverImgUrl = this.songDetail.al.picUrl;
 						// #endif
 						console.log(res[5][1].data.data[0].url)
-						this.bgAudioManager.src = res[5][1].data.data[0].url || ''
+						this.bgAudioManager.src = res[5][1].data.data[0].url
 						this.listenLyricIndex()
 						this.bgAudioManager.onPlay(() => {
 							this.iconPlay = 'iconpause';
@@ -282,6 +284,7 @@
 						});
 						this.bgAudioManager.onEnded(() => {
 							this.getMusic(this.$store.state.nextId)
+							
 						});
 						// #ifdef H5
 						this.bgAudioManager.onCanplay(() => {
@@ -293,6 +296,15 @@
 							// console.log(this.songTimeS)
 						})
 						// #endif
+						
+						this.$store.commit('SETMUSICPIC', this.songDetail.al.picUrl)
+						this.$store.commit('SETFABDISPLAY', true)
+						this.$store.commit('SETMUSIC', this.bgAudioManager)
+						this.$store.commit('SETFABKEY')
+						this.$store.commit('SETPREMUSIC', this.handleToPreSong)
+						this.$store.commit('SETNEXTMUSIC', this.handleToNextSong)
+						this.$store.commit('SETDOLIKE', this.handleToLike)
+						this.$store.commit('SETSONGID', songId)
 					}
 					this.isLoading = false
 				});
@@ -330,7 +342,10 @@
 				clearInterval(this.timer)
 			},
 			handleToSimi(songId) {
-				this.getMusic(songId)
+				// this.getMusic(songId)
+				uni.navigateTo({
+					url: '/pages/detail/detail?songId=' + songId,
+				});
 			},
 			handleToController() {
 				this.listenLyricIndex()
@@ -367,25 +382,30 @@
 				this.bgAudioManager.volume = (this.volume / 100)
 			},
 			handleToPreSong() {
-				this.bgAudioManager.destroy()
+				if(this.$store.state.music != ''){
+					this.$store.state.music.destroy()
+				}
 				this.getMusic(this.$store.state.preId)
 			},
 			handleToNextSong() {
-				this.bgAudioManager.destroy()
+				if(this.$store.state.music != ''){
+					this.$store.state.music.destroy()
+				}
 				this.getMusic(this.$store.state.nextId)
 			},
-			handleToMute(){
-				if(!this.isMute){
+			handleToMute() {
+				if (!this.isMute) {
 					this.bgAudioManager.volume = 0
 					this.volume = 0
 					this.isMute = true
-				}else{
+				} else {
 					this.bgAudioManager.volume = 0.2
 					this.volume = 20
 					this.isMute = false
 				}
 			},
 			handleToDetailController() {
+				// console.log(this.bgAudioManager.pause())
 				if (this.isDetailPlay) {
 					this.bgAudioManager.pause()
 				} else {
@@ -393,50 +413,72 @@
 					this.bgAudioManager.play()
 				}
 			},
-			handleToLike(songId){
-				if(!this.isLike){
-					likeMusic(songId).then(res =>{
-						if(res[1].data.code == '200'){
+			handleToLike(songId) {
+				if (!this.isLike || !this.$store.state.isLiked) {
+					likeMusic(songId).then(res => {
+						if (res[1].data.code == '200') {
 							uni.showToast({
 								title: '已添加到最爱!',
 								icon: 'success',
-								duration: 2000
+								duration: 1000
 							});
 							this.isLike = true
+							this.$store.commit('SETISLIKED', true)
 							// this.favoritePlayListId = res[1].data.playlistId
+							console.log(this.music.musicContent.paused)
 						}
 					})
-				}else{
-					console.log(this.favoritePlayListId)
-					removeMusic(this.favoritePlayListId,songId).then(res =>{
-						if(res[1].data.status == '200'){
+				} else {
+					removeMusic(this.favoritePlayListId, songId).then(res => {
+						if (res[1].data.status == '200') {
 							uni.showToast({
 								title: '已取消最爱!',
 								icon: 'success',
-								duration: 2000
+								duration: 1000
 							});
 							this.isLike = false
+							this.$store.commit('SETISLIKED', false)
 						}
 					})
 				}
+			},
+			
+			isDeathMusic(){
+				songUrl(this.$store.state.preId).then(res =>{
+					if(res[1].data.data[0].url == null || ''){
+						this.$store.commit('SETPREDEATHMUSIC', true)
+					}
+				});
+				
+				songUrl(this.$store.state.nextId).then(res =>{
+					if(res[1].data.data[0].url == null || ''){
+						this.$store.commit('SETNEXTDEATHMUSIC', true)
+					}
+				});
 			}
 		},
 		onLoad(options) {
-			// console.log(this.bgAudioManager.src)
+			if(this.$store.state.music != ''){
+				this.$store.state.music.destroy()
+			}
 			uni.getStorage({
 				key: 'uid',
-				success: (res) =>{
+				success: (res) => {
 					this.uid = res.data
 				}
 			})
-			getUserPlayList(this.uid).then(res =>{
-				if(res[1].data.code == '200'){
+			getUserPlayList(this.uid).then(res => {
+				if (res[1].data.code == '200') {
 					this.favoritePlayListId = res[1].data.playlist[0].id
 				}
 			})
 			// console.log(options.songId)
 			this.getMusic(options.songId)
+			
 			// console.log(this.$store.state.uid)
+		},
+		mounted() {
+			this.isDeathMusic()
 		},
 		onUnload() {
 			this.cancelLyricIndex()
@@ -449,7 +491,15 @@
 			// // #ifdef H5
 			// this.bgAudioManager.destroy()
 			// // #endif
-		}
+		},
+		// watch: {
+		// 	$route(to, from) {
+		// 		if(to.path == '/pages/detail/detail'){
+		// 			this.bgAudioManager.destroy()
+		// 		}
+		// 	}
+		// }
+
 	}
 </script>
 <style scoped>
@@ -684,19 +734,20 @@
 	}
 
 	.detail-ly {
-		height: 80vh ;
+		height: 80vh;
 		position: relative;
 		z-index: 99;
 		margin-bottom: 50rpx;
-		
+
 	}
-	.detail-ly view:nth-child(1){
+
+	.detail-ly view:nth-child(1) {
 		height: 120vh;
 		position: relative;
 		bottom: 40vh;
 		z-index: 99;
 	}
-	
+
 	.detail-progress {
 		width: 100%;
 		font-size: 30rpx;
@@ -726,7 +777,8 @@
 		display: flex;
 		justify-content: space-between;
 		position: absolute;
-		left: 50rpx;;
+		left: 50rpx;
+		;
 		align-items: center;
 	}
 
@@ -741,11 +793,13 @@
 	.xia {
 		z-index: 99;
 	}
-	.like{
+
+	.like {
 		z-index: 99;
 		font-size: 25rpx;
 		color: white;
 	}
+
 	.detail-volume {
 		z-index: 199;
 		width: 80%;

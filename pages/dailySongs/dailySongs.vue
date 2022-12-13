@@ -1,5 +1,6 @@
 <template>
 	<view class="list">
+		<popu-fab ref="popu" :key="key"></popu-fab>
 		<view class="fixbg" style="background-image: url('https://i.pinimg.com/564x/5d/37/d4/5d37d41712e23f63b6da902384d41f5e.jpg');"></view>
 		<music-head title="歌单" :icon="true" color="white"></music-head>
 		<view class="container" v-show="!isLoading">
@@ -74,6 +75,7 @@
 		},
 		data() {
 			return {
+				
 				playlist : {
 					coverImgUrl : '' ,
 					creator : {
@@ -86,11 +88,13 @@
 				privileges: {
 					
 				},
-				isLoading : true
+				isLoading : true,
+				key: 0
 			}
 		},
 		onLoad(options) {
 			// console.log(options.listId)
+			console.log(this.$store.state.musicPic)
 			recommendSongs().then(res =>{
 				if(res[1].data.code == '200'){
 					this.playlist = res[1].data.data.dailySongs;
@@ -101,6 +105,9 @@
 			
 		},
 		methods: {
+			popuRefresh(){
+				this.key = this.$store.state.fabKey
+			},
 			handleToDetail(songId){
 						uni.navigateTo({
 							url: '/pages/detail/detail?songId=' + songId,

@@ -1,22 +1,23 @@
 {
-  "id": "uni-scss",
-  "displayName": "uni-scss 辅助样式",
-  "version": "1.0.3",
-  "description": "uni-sass是uni-ui提供的一套全局样式 ，通过一些简单的类名和sass变量，实现简单的页面布局操作，比如颜色、边距、圆角等。",
+  "id": "uni-fab",
+  "displayName": "uni-fab 悬浮按钮",
+  "version": "1.2.4",
+  "description": "悬浮按钮 fab button ，点击可展开一个图标按钮菜单。",
   "keywords": [
-    "uni-scss",
     "uni-ui",
-    "辅助样式"
+    "uniui",
+    "按钮",
+    "悬浮按钮",
+    "fab"
 ],
   "repository": "https://github.com/dcloudio/uni-ui",
   "engines": {
-    "HBuilderX": "^3.1.0"
+    "HBuilderX": ""
   },
-  "dcloudext": {
-    "category": [
-        "JS SDK",
-        "通用 SDK"
-    ],
+  "directories": {
+    "example": "../../temps/example_temps"
+  },
+"dcloudext": {
     "sale": {
       "regular": {
         "price": "0.00"
@@ -33,10 +34,11 @@
       "data": "无",
       "permissions": "无"
     },
-    "npmurl": "https://www.npmjs.com/package/@dcloudio/uni-ui"
+    "npmurl": "https://www.npmjs.com/package/@dcloudio/uni-ui",
+    "type": "component-vue"
   },
   "uni_modules": {
-    "dependencies": [],
+    "dependencies": ["uni-scss","uni-icons"],
     "encrypt": [],
     "platforms": {
       "cloud": {
@@ -46,7 +48,7 @@
       "client": {
         "App": {
           "app-vue": "y",
-          "app-nvue": "u"
+          "app-nvue": "y"
         },
         "H5-mobile": {
           "Safari": "y",
@@ -69,8 +71,8 @@
           "QQ": "y"
         },
         "快应用": {
-          "华为": "n",
-          "联盟": "n"
+          "华为": "u",
+          "联盟": "u"
         },
         "Vue": {
             "vue2": "y",

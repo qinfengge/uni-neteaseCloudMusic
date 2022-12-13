@@ -1,5 +1,6 @@
 <template>
 	<view class="my">
+		<popu-fab ref="popu" :key="key"></popu-fab>
 		<scroll-view scroll-y="true">
 			<uni-card class="my-card" :isFull="true"
 				:style="{'background-image': 'url('+ userAccount.backgroundUrl +')'}">
@@ -37,9 +38,13 @@
 				uid: '',
 				userAccount: [],
 				userPlayList: [],
+				key: 0
 			}
 		},
 		methods: {
+			popuRefresh(){
+				this.key = this.$store.state.fabKey
+			},
 			handleToPlayListDetail(id){
 				uni.navigateTo({
 					url: '/pages/list/list?listId=' + id,
@@ -74,6 +79,12 @@
 					})
 				}
 			})
+		},
+		mounted() {
+			const timer = setInterval(()=>{
+				this.key = this.$store.state.fabKey
+				this.$refs.popu.fresh()
+			}, 2000) // 每两秒执行1次
 		}
 	}
 </script>

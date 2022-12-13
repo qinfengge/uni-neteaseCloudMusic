@@ -45,6 +45,15 @@ export function list(listId) {
 	});
 }
 
+export function getAccount() {
+	getCookie()
+	return uni.request({
+		url: `${baseUrl}/user/account?timestamp=${time}&cookie=${cookie}`,
+		withCredentials: true,
+		method: 'GET'
+	});
+}
+
 export function pdLogin(phone, password) {
 	return new Promise(function(reslove, reject) {
 		uni.request({

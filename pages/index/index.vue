@@ -1,6 +1,7 @@
 <template>
 	<view class="index">
-		<music-head title="网易云音乐" :icon="false"></music-head>
+		<popu-fab ref="popu" :key="key"></popu-fab>
+		<!-- <music-head title="网易云音乐" :icon="false"></music-head> -->
 		<view class="container">
 			<scroll-view scroll-y="true">
 				<view class="banner">
@@ -87,6 +88,7 @@
 	import {
 		topList,
 		getBanner,
+		getAccount,
 		FM
 	} from '../../common/api.js'
 	import mForSkeleton from "@/components/m-for-skeleton/m-for-skeleton";
@@ -100,7 +102,9 @@
 				autoplay: true,
 				interval: 5000,
 				duration: 500,
-				cookie: ''
+				cookie: '',
+				key: 0,
+				uid: 0
 			}
 		},
 		components: {
@@ -139,7 +143,11 @@
 				}
 			})
 		},
+		
 		methods: {
+			popuRefresh(){
+				this.key = this.$store.state.fabKey
+			},
 			handleToList(listId) {
 				uni.navigateTo({
 					url: '/pages/list/list?listId=' + listId,
@@ -157,10 +165,18 @@
 						this.cookie = res.data
 					}
 				});
-				console.log(this.cookie)
+				
+				uni.getStorage({
+					key: 'uid',
+					success: (res) => {
+						this.uid = res.data
+					}
+				})
+				
+				// console.log(this.cookie)
 				if(this.cookie == null || this.cookie == ''){
 					uni.showToast({
-					    title: '请先的登录',
+					    title: '请先登录',
 						icon: 'error',
 					    duration: 2000
 					});
@@ -171,6 +187,19 @@
 						complete: () => {}
 					});
 				}
+				
+				if(this.uid == null || this.uid == ''){
+					getAccount().then(res =>{
+						if (res[1].data.code == '200') {
+							this.uid = res[1].data.account.id
+							uni.setStorage({
+								key: 'uid',
+								data: res[1].data.account.id
+							})
+						}
+					})
+				}
+				
 			},
 			handleToRecommend(e){
 				console.log(e.detail.index)
@@ -204,7 +233,12 @@
 		},
 		mounted() {
 			this.checkLogin()
-		}
+			const timer = setInterval(()=>{
+				this.key = this.$store.state.fabKey
+				this.$refs.popu.fresh()
+				// console.log(this.$refs.popu)
+			}, 2000) // 每两秒执行1次
+		},
 	}
 </script>
 

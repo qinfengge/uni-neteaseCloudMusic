@@ -1,5 +1,6 @@
 <template>
 	<view class="search">
+		<popu-fab ref="popu"></popu-fab>
 		<music-head title="搜索" :icon="true" :iconblack="true"></music-head>
 		<view class="container">
 			<scroll-view scroll-y="true">
